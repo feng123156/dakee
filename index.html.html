@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+  <title>🧠 达克效应 · 认知阶段训练</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+    body {
+      background: #f4f7fc;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      margin: 0;
+    }
+    .card {
+      max-width: 950px;
+      width: 100%;
+      background: white;
+      border-radius: 32px;
+      box-shadow: 0 20px 40px rgba(0, 10, 30, 0.08);
+      padding: 28px 24px 32px;
+      border: 1px solid #e9eef4;
+    }
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #1a2e4b;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 3px solid #d0e0ff;
+      padding-bottom: 20px;
+      margin-bottom: 16px;
+    }
+    h1 span {
+      background: #c0392b;
+      color: white;
+      font-size: 0.9rem;
+      padding: 4px 14px;
+      border-radius: 40px;
+    }
+    .subtitle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .difficulty-bar {
+      display: flex;
+      gap: 8px;
+      background: #eef3fa;
+      padding: 5px;
+      border-radius: 48px;
+    }
+    .difficulty-btn {
+      background: transparent;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #3e5e7e;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .difficulty-btn.active {
+      background: #c0392b;
+      color: white;
+    }
+    .theory-badge {
+      background: #eef3fa;
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      color: #c0392b;
+    }
+    .case-panel {
+      background: #fdf3f2;
+      border-radius: 24px;
+      padding: 22px 24px;
+      margin-bottom: 24px;
+      border-left: 8px solid #c0392b;
+    }
+    .case-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .case-title {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: #7b241c;
+    }
+    .case-index {
+      background: #c0392b;
+      color: white;
+      border-radius: 40px;
+      padding: 2px 14px;
+      font-size: 0.9rem;
+    }
+    .case-text {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #6d241c;
+      background: rgba(255,255,255,0.7);
+      padding: 18px 22px;
+      border-radius: 20px;
+      border: 1px solid #f7c6c1;
+      font-weight: 400;
+    }
+    .dk-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin: 16px 0 12px;
+    }
+    .section-item {
+      background: #fff;
+      border-radius: 20px;
+      padding: 8px 0 4px;
+      border-bottom: 1px solid #e2e9f2;
+    }
+    .section-label {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+    .section-letter {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #c0392b;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fdecea;
+      border-radius: 18px;
+      margin-right: 16px;
+      box-shadow: 0 3px 0 #e6b0aa;
+    }
+    .section-desc {
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: #7b241c;
+    }
+    .input-wrapper {
+      margin-left: 64px;
+    }
+    .dk-input {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 1rem;
+      border: 2px solid #d7e1ec;
+      border-radius: 20px;
+      background: white;
+      resize: vertical;
+      line-height: 1.5;
+      font-weight: 400;
+    }
+    .dk-input:focus {
+      border-color: #c0392b;
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(192,57,43,0.1);
+    }
+    .feedback-hint {
+      margin-left: 64px;
+      margin-top: 8px;
+      min-height: 30px;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .correct-badge {
+      color: #0f6e3f;
+      background: #e2f3e4;
+      padding: 4px 14px;
+      border-radius: 30px;
+      font-weight: 500;
+    }
+    .incorrect-badge {
+      color: #a12b2b;
+      background: #ffe6e6;
+      padding: 4px 14px;
+      border-radius: 30px;
+    }
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin: 24px 0 16px 64px;
+    }
+    .btn {
+      background: white;
+      border: 1.5px solid #b9c8dd;
+      padding: 12px 24px;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #1e3a6f;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #d0dceb;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary {
+      background: #c0392b;
+      border-color: #c0392b;
+      color: white;
+      box-shadow: 0 4px 0 #7b241c;
+    }
+    .btn-primary:hover { background: #a93226; }
+    .global-feedback {
+      margin-top: 24px;
+      padding: 18px 22px;
+      background: #fefbfc;
+      border-radius: 24px;
+      border: 1px dashed #f7b7b1;
+    }
+    .summary-line {
+      font-weight: 600;
+      margin-bottom: 16px;
+      font-size: 1.1rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    .new-case-btn {
+      background: #fce4e4;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-weight: 600;
+      color: #c0392b;
+      cursor: pointer;
+      box-shadow: 0 2px 0 #e6b0aa;
+    }
+    .answer-detail {
+      background: #fef5f5;
+      border-radius: 20px;
+      padding: 16px 20px;
+      margin: 12px 0;
+    }
+    .wrong-reason {
+      color: #a12b2b;
+      font-weight: 500;
+      margin-right: 12px;
+    }
+    .correct-answer {
+      color: #c0392b;
+      font-weight: 500;
+    }
+    .insight-box {
+      background: #faf2e6;
+      padding: 18px 22px;
+      border-radius: 20px;
+      border-left: 6px solid #d35400;
+      margin-top: 16px;
+    }
+    .insight-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #873a00;
+      font-size: 1.05rem;
+    }
+    .footnote {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #4a6582;
+      text-align: right;
+    }
+    @media (max-width: 700px) {
+      .input-wrapper, .action-bar { margin-left: 0; }
+      .section-letter { width: 40px; height: 40px; font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h1>🧠 达克效应训练 <span>四阶段</span></h1>
+  <div class="subtitle">
+    <div class="difficulty-bar" id="difficultyBar">
+      <button class="difficulty-btn active" data-level="0">🌱 初级</button>
+      <button class="difficulty-btn" data-level="1">🍃 中级</button>
+      <button class="difficulty-btn" data-level="2">🔥 高级</button>
+    </div>
+    <div style="display: flex; gap: 12px;">
+      <div class="theory-badge" id="caseCountDisplay">📚 初级 · 案例 1/2</div>
+      <button class="new-case-btn" id="nextCaseBtn">🎲 换一案例</button>
+    </div>
+  </div>
+
+  <div class="case-panel">
+    <div class="case-header">
+      <div class="case-title"><span>📋</span> <span id="caseTitleText">班级小测</span></div>
+      <span class="case-index" id="caseIndexBadge">#1-1</span>
+    </div>
+    <div class="case-text" id="caseDescription"></div>
+  </div>
+
+  <div class="dk-grid">
+    <div class="section-item">
+      <div class="section-label"><div class="section-letter">1</div><div class="section-desc">他表现出什么状态？</div></div>
+      <div class="input-wrapper"><textarea id="i1" class="dk-input" rows="2"></textarea></div>
+      <div id="f1" class="feedback-hint"></div>
+    </div>
+    <div class="section-item">
+      <div class="section-label"><div class="section-letter">2</div><div class="section-desc">属于达克效应哪一阶段？</div></div>
+      <div class="input-wrapper"><textarea id="i2" class="dk-input" rows="2"></textarea></div>
+      <div id="f2" class="feedback-hint"></div>
+    </div>
+    <div class="section-item">
+      <div class="section-label"><div class="section-letter">3</div><div class="section-desc">为什么会这样？</div></div>
+      <div class="input-wrapper"><textarea id="i3" class="dk-input" rows="3"></textarea></div>
+      <div id="f3" class="feedback-hint"></div>
+    </div>
+    <div class="section-item">
+      <div class="section-label"><div class="section-letter">4</div><div class="section-desc">如何走出这个阶段？</div></div>
+      <div class="input-wrapper"><textarea id="i4" class="dk-input" rows="3"></textarea></div>
+      <div id="f4" class="feedback-hint"></div>
+    </div>
+  </div>
+
+  <div class="action-bar">
+    <button class="btn btn-primary" id="checkBtn">✨ 检查我的答案</button>
+    <button class="btn" id="clearBtn">🧹 清空</button>
+  </div>
+
+  <div class="global-feedback">
+    <div class="summary-line"><span id="summaryMessage">👆 填写后点击「检查答案」</span></div>
+    <div id="feedbackPanel" style="display: none;">
+      <div class="answer-detail" id="answerDetailArea"></div>
+      <div class="insight-box">
+        <div class="insight-title">💡 达克效应启示</div>
+        <div id="insightContent"></div>
+      </div>
+    </div>
+  </div>
+  <div class="footnote">⚡ 检查后显示参考答案与解析</div>
+</div>
+
+<script>
+  (function(){
+    "use strict";
+    const i1 = document.getElementById('i1');
+    const i2 = document.getElementById('i2');
+    const i3 = document.getElementById('i3');
+    const i4 = document.getElementById('i4');
+    const f1 = document.getElementById('f1');
+    const f2 = document.getElementById('f2');
+    const f3 = document.getElementById('f3');
+    const f4 = document.getElementById('f4');
+    const summaryMsg = document.getElementById('summaryMessage');
+    const feedbackPanel = document.getElementById('feedbackPanel');
+    const answerDetailArea = document.getElementById('answerDetailArea');
+    const insightContent = document.getElementById('insightContent');
+    const caseDescription = document.getElementById('caseDescription');
+    const caseTitleText = document.getElementById('caseTitleText');
+    const caseIndexBadge = document.getElementById('caseIndexBadge');
+    const caseCountDisplay = document.getElementById('caseCountDisplay');
+    const nextCaseBtn = document.getElementById('nextCaseBtn');
+    const checkBtn = document.getElementById('checkBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+
+    const levels = [
+      { name:'初级', cases:[
+        { id:'1-1', title:'班级小测',
+          desc:'小航刚学完一个单元，还没做难题，就说“这也太简单了，我肯定满分”，结果只考了62分。',
+          r1:'盲目自信，觉得很简单，轻视学习',
+          r2:'愚昧之巅',
+          r3:'知识少、盲区大，不知道自己不知道',
+          r4:'多做题、见难题，接受反馈，看到自己不足',
+          c1:v=>/盲目|自信|简单|轻视/.test(v),
+          c2:v=>/愚昧之巅/.test(v),
+          c3:v=>/不知道|盲区|自大/.test(v),
+          c4:v=>/做题|练习|反馈|不足/.test(v),
+          insight:'越无知的人越容易盲目自信。承认自己有盲区，多实践，才能走出愚昧之巅。'
+        },
+        { id:'1-2', title:'学篮球',
+          desc:'小哲看别人打篮球觉得很容易，上场前说“我随便打都很厉害”，结果连运球都不稳，频频失误。',
+          r1:'上场前极度自信，上场后表现很差',
+          r2:'愚昧之巅',
+          r3:'只看表面，不懂难度，认知不足导致盲目自信',
+          r4:'多练习，接受指导，正视自己的真实水平',
+          c1:v=>/自信|厉害|简单/.test(v),
+          c2:v=>/愚昧之巅/.test(v),
+          c3:v=>/不懂难度|认知不足/.test(v),
+          c4:v=>/练习|指导|正视/.test(v),
+          insight:'外行看什么都简单，内行才知道深浅。达克效应告诉我们：别高估自己。'
+        }
+      ]},
+      { name:'中级', cases:[
+        { id:'2-1', title:'期中考试',
+          desc:'小琳以前觉得自己学得很好，成绩出来很差，突然觉得自己什么都不会，很自卑，不想学了。',
+          r1:'从自信变自卑，情绪低落，想放弃',
+          r2:'绝望之谷',
+          r3:'发现自己很多不会，认知被打破，自信崩塌',
+          r4:'接受现实，慢慢来，补薄弱点，稳步提升',
+          c1:v=>/自卑|低落|放弃/.test(v),
+          c2:v=>/绝望之谷/.test(v),
+          c3:v=>/打破|崩塌|很多不会/.test(v),
+          c4:v=>/补弱|慢慢来|提升/.test(v),
+          insight:'绝望之谷是成长必经之路。熬过低谷，就会走上开悟之坡。'
+        },
+        { id:'2-2', title:'学编程',
+          desc:'小泽一开始觉得编程简单，一写代码全是bug，瞬间崩溃，觉得自己不是这块料。',
+          r1:'从自信到崩溃，自我否定，觉得自己不行',
+          r2:'绝望之谷',
+          r3:'真实难度远超预期，能力与自信不匹配',
+          r4:'从简单开始，多调试，积累经验，慢慢进步',
+          c1:v=>/崩溃|否定|不行/.test(v),
+          c2:v=>/绝望之谷/.test(v),
+          c3:v=>/难度|预期|不匹配/.test(v),
+          c4:v=>/简单开始|练习|积累/.test(v),
+          insight:'绝望不是终点，是清醒的开始。接受不完美，才能真正成长。'
+        }
+      ]},
+      { name:'高级', cases:[
+        { id:'3-1', title:'学霸心态',
+          desc:'小轩成绩很好，但他总说“我还有很多不会”，遇到难题会认真研究，心态稳定，持续进步。',
+          r1:'谦虚，知道自己不足，认真钻研，稳定进步',
+          r2:'平稳高原',
+          r3:'能力强，认知清晰，知道知识无边，不骄傲',
+          r4:'保持学习，持续探索，帮助他人，教学相长',
+          c1:v=>/谦虚|认真|稳定|进步/.test(v),
+          c2:v=>/平稳高原/.test(v),
+          c3:v=>/认知清晰|谦虚|边界/.test(v),
+          c4:v=>/保持学习|帮助|持续/.test(v),
+          insight:'真正厉害的人，都知道自己的边界。越博学，越谦逊。'
+        },
+        { id:'3-2', title:'社团负责人',
+          desc:'小羽负责社团活动，经验丰富，不夸大也不自卑，遇到问题冷静解决，不断优化方法。',
+          r1:'冷静、务实、不骄不躁，持续优化',
+          r2:'平稳高原',
+          r3:'能力成熟，认知客观，自信稳定',
+          r4:'总结经验，分享方法，持续改进',
+          c1:v=>/冷静|务实|稳定/.test(v),
+          c2:v=>/平稳高原/.test(v),
+          c3:v=>/成熟|客观|稳定/.test(v),
+          c4:v=>/总结|分享|改进/.test(v),
+          insight:'最高级的认知，是清醒、稳定、持续成长。这是达克效应的最终状态。'
+        }
+      ]}
+    ];
+
+    let li=0, ci=0;
+    function cur(){return levels[li].cases[ci]}
+    function render(){
+      const c=cur();
+      caseTitleText.textContent=c.title;
+      caseIndexBadge.textContent='# '+c.id;
+      caseDescription.textContent=c.desc;
+      caseCountDisplay.textContent=`📚 ${levels[li].name} · 案例 ${ci+1}/${levels[li].cases.length}`;
+      i1.value=i2.value=i3.value=i4.value='';
+      f1.innerHTML=f2.innerHTML=f3.innerHTML=f4.innerHTML='';
+      summaryMsg.innerText='👆 填写后点击「检查答案」';
+      feedbackPanel.style.display='none';
+      insightContent.textContent=c.insight;
+    }
+    function setDifficulty(idx){li=idx;ci=0;difficultyBtns.forEach((b,i)=>b.classList.toggle('active',i===idx));render()}
+    function next(){ci=(ci+1)%levels[li].cases.length;render()}
+    function clearAll(){i1.value=i2.value=i3.value=i4.value='';f1.innerHTML=f2.innerHTML=f3.innerHTML=f4.innerHTML='';summaryMsg.innerText='👆 填写后点击「检查答案」';feedbackPanel.style.display='none'}
+    function check(){
+      const c=cur();
+      const v1=i1.value.trim(),v2=i2.value.trim(),v3=i3.value.trim(),v4=i4.value.trim();
+      const ok1=c.c1(v1),ok2=c.c2(v2),ok3=c.c3(v3),ok4=c.c4(v4);
+      f1.innerHTML=ok1?'<span class="correct-badge">✓ 正确</span>':'<span class="incorrect-badge">✗ 错误</span>';
+      f2.innerHTML=ok2?'<span class="correct-badge">✓ 正确</span>':'<span class="incorrect-badge">✗ 错误</span>';
+      f3.innerHTML=ok3?'<span class="correct-badge">✓ 正确</span>':'<span class="incorrect-badge">✗ 错误</span>';
+      f4.innerHTML=ok4?'<span class="correct-badge">✓ 正确</span>':'<span class="incorrect-badge">✗ 错误</span>';
+      let html='<div style="font-weight:700;margin-bottom:12px;">📋 检查详情</div>';
+      html+=`<div><strong>1 状态：</strong>${ok1?'✅ 正确':'❌ 错误'}${!ok1?'<br><span class="wrong-reason">描述不准确</span> <span class="correct-answer">'+c.r1+'</span>':''}</div>`;
+      html+=`<div><strong>2 阶段：</strong>${ok2?'✅ 正确':'❌ 错误'}${!ok2?'<br><span class="wrong-reason">阶段判断错误</span> <span class="correct-answer">'+c.r2+'</span>':''}</div>`;
+      html+=`<div><strong>3 原因：</strong>${ok3?'✅ 正确':'❌ 错误'}${!ok3?'<br><span class="wrong-reason">分析不完整</span> <span class="correct-answer">'+c.r3+'</span>':''}</div>`;
+      html+=`<div><strong>4 方法：</strong>${ok4?'✅ 正确':'❌ 错误'}${!ok4?'<br><span class="wrong-reason">方法不具体</span> <span class="correct-answer">'+c.r4+'</span>':''}</div>`;
+      answerDetailArea.innerHTML=html;
+      feedbackPanel.style.display='block';
+      summaryMsg.innerText=(ok1&&ok2&&ok3&&ok4)?'🎉 完全正确！':'💡 对照答案修正即可';
+    }
+    function init(){
+      difficultyBtns.forEach((b,i)=>b.onclick=()=>setDifficulty(i));
+      nextCaseBtn.onclick=next;checkBtn.onclick=check;clearBtn.onclick=clearAll;
+      setDifficulty(0);
+    }
+    init();
+  })();
+</script>
+</body>
+</html>
